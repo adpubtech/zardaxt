@@ -115,6 +115,7 @@ class ZardaxtApiServer(BaseHTTPRequestHandler):
                     "avg_score_os_class": classification["avg_score_os_class"]
                 })
         else:
+            print(fp_list)
             msg = {
                 'lookup_ip': lookup_ip,
                 'msg': 'no fingerprint for this IP ({} fingerprints in memory)'.format(len(fp_copy)),

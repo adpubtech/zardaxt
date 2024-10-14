@@ -112,6 +112,11 @@ def process_packet(ts, header_len, cap_len, ip_pkt, ip_version):
                 # even if received with a hop limit of 0.
                 ip_ttl = ip_pkt.hlim
 
+            if len(fingerprints) > config.get('clear_dict_after', 5000):
+                log('Clearing fingerprints dict', 'zardaxt')
+                fingerprints.clear()
+                timestamps.clear()
+
             if not fingerprints.get(src_ip, None):
                 fingerprints[src_ip] = []
 
@@ -155,10 +160,7 @@ def process_packet(ts, header_len, cap_len, ip_pkt, ip_version):
                 'tcp_mss': mss
             })
 
-            if len(fingerprints) > config.get('clear_dict_after', 5000):
-                log('Clearing fingerprints dict', 'zardaxt')
-                fingerprints.clear()
-                timestamps.clear()
+            fingerprints[src_ip] = fingerprints[src_ip][-10:]
 
             if config.get('store_fingerprints', False):
                 if len(fingerprints) > 0 and len(fingerprints) % config.get('write_after', 1000) == 0:
